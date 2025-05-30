@@ -37,10 +37,17 @@ export default async function handler(req, res) {
     console.error("OpenAI API Error:", error);
 
     if (error.response) {
-      console.error("Error details:", error.response.data);
-      res
-        .status(error.response.status || 500)
-        .json({ error: error.response.data });
+      const status = error.response.status || 500;
+      const errorData = error.response.data;
+
+      if (status === 429) {
+        return res.status(429).json({
+          error:
+            "OpenAI quota exceeded. Please try again later or check your API usage.",
+        });
+      }
+      console.error("Error details:", errorData);
+      res.status(status).json({ error: errorData });
     } else {
       res.status(500).json({ error: "OpenAI API request failed" });
     }
