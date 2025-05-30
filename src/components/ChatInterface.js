@@ -7,6 +7,25 @@ export default function ChatInterface() {
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
 
+  // const sendMessage = async () => {
+  //   if (!input.trim()) return;
+
+  //   const userMessage = { sender: "user", content: input };
+  //   setMessages((prev) => [...prev, userMessage]);
+  //   setInput("");
+  //   setLoading(true);
+
+  //   const res = await fetch("/api/chat", {
+  //     method: "POST",
+  //     headers: { "Content-Type": "application/json" },
+  //     body: JSON.stringify({ message: input }),
+  //   });
+
+  //   const data = await res.json();
+  //   setMessages((prev) => [...prev, { sender: "bot", content: data.response }]);
+  //   setLoading(false);
+  // };
+
   const sendMessage = async () => {
     if (!input.trim()) return;
 
@@ -15,15 +34,33 @@ export default function ChatInterface() {
     setInput("");
     setLoading(true);
 
-    const res = await fetch("/api/chat", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ message: input }),
-    });
+    try {
+      const res = await fetch("/api/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ message: input }),
+      });
 
-    const data = await res.json();
-    setMessages((prev) => [...prev, { sender: "bot", content: data.response }]);
-    setLoading(false);
+      if (!res.ok) {
+        throw new Error(`HTTP error! status: ${res.status}`);
+      }
+
+      const data = await res.json();
+
+      const botReply = data.response || "Sorry, I didn't understand that.";
+      setMessages((prev) => [...prev, { sender: "bot", content: botReply }]);
+    } catch (error) {
+      console.error("Error sending message:", error);
+      setMessages((prev) => [
+        ...prev,
+        {
+          sender: "bot",
+          content: "Something went wrong. Please try again later.",
+        },
+      ]);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
