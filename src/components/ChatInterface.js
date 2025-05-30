@@ -26,43 +26,6 @@ export default function ChatInterface() {
     setLoading(false);
   };
 
-  // const sendMessage = async () => {
-  //   if (!input.trim()) return;
-
-  //   const userMessage = { sender: "user", content: input };
-  //   setMessages((prev) => [...prev, userMessage]);
-  //   setInput("");
-  //   setLoading(true);
-
-  //   try {
-  //     const res = await fetch("/api/chat", {
-  //       method: "POST",
-  //       headers: { "Content-Type": "application/json" },
-  //       body: JSON.stringify({ message: input }),
-  //     });
-
-  //     if (!res.ok) {
-  //       throw new Error(`HTTP error! status: ${res.status}`);
-  //     }
-
-  //     const data = await res.json();
-
-  //     const botReply = data.response || "Sorry, I didn't understand that.";
-  //     setMessages((prev) => [...prev, { sender: "bot", content: botReply }]);
-  //   } catch (error) {
-  //     console.error("Error sending message:", error);
-  //     setMessages((prev) => [
-  //       ...prev,
-  //       {
-  //         sender: "bot",
-  //         content: "Something went wrong. Please try again later.",
-  //       },
-  //     ]);
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
-
   return (
     <Container className="py-5">
       <Row className="justify-content-center">
